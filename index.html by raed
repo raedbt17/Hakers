@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مكتبة الراب التونسي</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Tahoma, Arial, sans-serif;
+      background: #141414;
+      color: #fff;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* خلفية متحركة حمراء */
+    .background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 20%, rgba(229,9,20,0.3), transparent 60%),
+                  radial-gradient(circle at 80% 80%, rgba(229,9,20,0.3), transparent 60%),
+                  #141414;
+      background-size: 200% 200%;
+      animation: moveRed 12s linear infinite;
+      z-index: -1;
+    }
+    @keyframes moveRed {
+      0% { background-position: 0% 0%, 100% 100%, center; }
+      50% { background-position: 100% 0%, 0% 100%, center; }
+      100% { background-position: 0% 0%, 100% 100%, center; }
+    }
+
+    header {
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    header h1 {
+      color: #fff;
+      margin: 0;
+      font-size: 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+    header h1 svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    /* زر القائمة */
+    .menu-btn {
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      font-size: 26px;
+      cursor: pointer;
+      color: #fff;
+      background: none;
+      border: none;
+      z-index: 11;
+    }
+
+    /* القائمة الجانبية */
+    .sidebar {
+      position: fixed;
+      left: -250px;
+      top: 0;
+      width: 250px;
+      height: 100%;
+      background: #222;
+      transition: left 0.3s;
+      padding-top: 60px;
+      z-index: 20;
+    }
+    .sidebar.active {
+      left: 0;
+    }
+    .sidebar a, .close-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px;
+      color: #fff;
+      text-decoration: none;
+      border-bottom: 1px solid #333;
+      cursor: pointer;
+    }
+    .sidebar a:hover, .close-btn:hover {
+      background: #e50914;
+    }
+    .sidebar svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    /* واجهة منبثقة للتواصل */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 30;
+      justify-content: center;
+      align-items: center;
+    }
+    .popup-content {
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 300px;
+    }
+    .popup-content h2 {
+      margin: 0 0 10px;
+      color: #e50914;
+    }
+    .popup-content p {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .popup button, .popup a {
+      margin-top: 10px;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #e50914;
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .popup button:hover, .popup a:hover {
+      background: #b20710;
+    }
+
+    .videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .video {
+      background: #222;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform .3s;
+    }
+    .video:hover {
+      transform: scale(1.05);
+    }
+    .video iframe {
+      width: 100%;
+      height: 180px;
+      border: 0;
+    }
+    .video h3 {
+      padding: 10px;
+      margin: 0;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- الخلفية المتحركة -->
+  <div class="background"></div>
+
+  <!-- زر فتح القائمة -->
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <!-- القائمة الجانبية -->
+  <div class="sidebar" id="sidebar">
+    <span class="close-btn" onclick="toggleMenu()">✖ إغلاق</span>
+
+    <!-- طلب أغنية -->
+    <a onclick="requestSong()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="#1DB954" d="M12 0C5.373 0 0 5.373 0 12c0 6.628 5.373 12 12 12s12-5.372 12-12c0-6.627-5.373-12-12-12zm5.545 17.356c-.229.377-.715.496-1.092.266-2.996-1.83-6.773-2.244-11.22-1.23-.428.099-.856-.172-.955-.6-.1-.427.171-.856.599-.955 4.847-1.107 9.065-.636 12.391 1.381.377.229.496.715.277 1.138zm1.541-3.444c-.286.465-.892.61-1.357.324-3.43-2.108-8.65-2.724-12.694-1.492-.51.153-1.047-.133-1.2-.643-.153-.51.133-1.047.643-1.2 4.563-1.377 10.35-.695 14.285 1.711.465.286.61.892.323 1.3zm.135-3.646c-4.084-2.427-10.874-2.647-14.788-1.457-.61.191-1.268-.152-1.459-.762-.191-.61.152-1.268.762-1.459 4.434-1.357 12.078-1.102 16.792 1.742.553.324.734 1.032.41 1.585-.323.553-1.032.733-1.585.41z"/>
+      </svg>
+       طلب أغنية حسب طلبك
+    </a>
+
+    <!-- تواصل مع المطور -->
+    <a onclick="showPopup()">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="#25D366" d="M12 0C5.37 0 0 5.37 0 12c0 2.12.55 4.16 1.6 5.95L0 24l6.27-1.63A11.94 11.94 0 0 0 12 24c6.63 0 12-5.37 12-12S18.63 0 12 0zm0 21.82c-1.95 0-3.86-.52-5.53-1.51l-.4-.24-3.72.96.99-3.63-.25-.38A9.83 9.83 0 0 1 2.18 12c0-5.42 4.4-9.82 9.82-9.82S21.82 6.58 21.82 12 17.42 21.82 12 21.82zm5.39-7.44c-.3-.15-1.77-.87-2.05-.96-.27-.1-.47-.15-.67.15s-.77.96-.94 1.15-.35.22-.65.07c-.3-.15-1.26-.47-2.4-1.5-.88-.79-1.48-1.77-1.65-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37s-1.04 1.02-1.04 2.5 1.07 2.9 1.22 3.1c.15.2 2.11 3.23 5.12 4.53.72.31 1.28.5 1.72.64.72.23 1.37.2 1.88.12.57-.08 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.08-.12-.27-.2-.57-.35z"/>
+      </svg>
+       تواصل مع المطور
+    </a>
+
+    <!-- إنستغرام -->
+    <a href="https://www.instagram.com/raed____officiel?igsh=MXI1Ynd3cnZ6a3RmbA==" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="#E1306C" d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5A4.25 4.25 0 0 0 20.5 16.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5ZM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Zm5.25-.88a1.13 1.13 0 1 1-2.25 0 1.13 1.13 0 0 1 2.25 0Z"/>
+      </svg>
+       اشترك في إنستغرام
+    </a>
+
+    <!-- تيك توك -->
+    <a href="https://www.tiktok.com/@smoking.2025?_t=ZM-8z2FDmUesz7&_r=1" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="#000000" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2Z"/>
+        <path fill="#25F4EE" d="M15 8.5c1.933 0 3.5 1.567 3.5 3.5S16.933 15.5 15 15.5c-.276 0-.546-.03-.805-.09a4.502 4.502 0 0 1-8.426-2.16c0-2.485 2.015-4.5 4.5-4.5.69 0 1.345.156 1.93.434a3.486 3.486 0 0 0 3.801-.684Z"/>
+        <path fill="#FE2C55" d="M15 8v1.934c-.71.352-1.515.566-2.365.566a4.502 4.502 0 0 1-8.427-2.16c0-2.485 2.015-4.5 4.5-4.5.69 0 1.345.156 1.93.434A3.486 3.486 0 0 0 15 8Z"/>
+      </svg>
+       اشترك في تيك توك
+    </a>
+  </div>
+
+  <!-- popup تواصل مع المطور -->
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <h2>تواصل مع المطور</h2>
+      <p>واتساب: <strong>+216 25476446</strong></p>
+      <a href="https://wa.me/21625476446" target="_blank"> تواصل عبر WhatsApp</a>
+      <br>
+      <button onclick="closePopup()">إغلاق</button>
+    </div>
+  </div>
+
+  <header>
+    <h1>
+      <!-- أيقونة يوتيوب -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path fill="#e50914" d="M23.498 6.186a2.974 2.974 0 0 0-2.094-2.103C19.505 3.5 12 3.5 12 3.5s-7.505 0-9.404.583a2.974 2.974 0 0 0-2.094 2.103C0 8.09 0 12 0 12s0 3.91.502 5.814a2.974 2.974 0 0 0 2.094 2.103C4.495 20.5 12 20.5 12 20.5s7.505 0 9.404-.583a2.974 2.974 0 0 0 2.094-2.103C24 15.91 24 12 24 12s0-3.91-.502-5.814ZM9.75 15.5v-7l6 3.5-6 3.5Z"/>
+      </svg>
+      مكتبة الراب التونسي
+    </h1>
+  </header>
+
+  <section class="videos">
+    <div class="video">
+      <iframe src="https://www.youtube.com/embed/i16yHc5vYik" allowfullscreen></iframe>
+      <h3>El Castro – Trauma (EP ١/٥)</h3>
+    </div>
+    <div class="video">
+      <iframe src="https://www.youtube.com/embed/v0mx--tSrtA" allowfullscreen></iframe>
+      <h3>Trap King – Nuthin' but a G thang</h3>
+    </div>
+    <div class="video">
+      <iframe src="https://www.youtube.com/embed/Yg7h_QuBRVI" allowfullscreen></iframe>
+      <h3>True Story</h3>
+    </div>
+  </section>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+    function requestSong() {
+      alert("🚧 المزاولة تحت التطوير 🚧");
+    }
+    function showPopup() {
+      document.getElementById("popup").style.display = "flex";
+    }
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
